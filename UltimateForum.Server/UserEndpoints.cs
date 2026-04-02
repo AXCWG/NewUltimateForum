@@ -15,6 +15,12 @@ class RegisterPayload
     public string? Email { get; set; }
     public string? Password { get; set; }
 }
+
+class ChangePasswordPayload
+{
+    public required string OldPassword { get; set; }
+    public required string NewPassword { get; set; }
+}
 public static class UserEndpoints
 {
     extension(RouteGroupBuilder app)
@@ -37,6 +43,22 @@ public static class UserEndpoints
                 }
                 return Results.BadRequest("Username or password is incorrect");
             });
+            app.MapPost("change-password",
+                (HttpContext context, UltimateForumDbContext db, ChangePasswordPayload payload) =>
+                {
+                    if (context.Session.GetLong("uid") is {} id)
+                    {
+                        if (db.Users.FirstOrDefault(o=>o.Id == id && o.Password == payload.OldPassword) is {} user)
+                        {
+                            user.Password = payload.NewPassword;
+                            db.SaveChanges();
+                            return Results.Ok(); 
+                        }
+                    }
+
+                    return Results.Unauthorized(); 
+
+                });
             app.MapGet("info", (HttpContext context, UltimateForumDbContext db) =>
             {
                 var uidS = context.Session.GetString("uid");
@@ -61,7 +83,7 @@ public static class UserEndpoints
             });
             app.MapPost("register", (HttpContext context, UltimateForumDbContext db, RegisterPayload payload) =>
             {
-                var entity = new User()
+                var entity = new User
                 {
                     Username = payload.Username,
                     Password = payload.Password,
@@ -73,6 +95,7 @@ public static class UserEndpoints
                 context.Session.SetString("uid", entity.Id.ToString());
                 return Results.Ok();
             }); 
+            
             return app; 
         }
 
