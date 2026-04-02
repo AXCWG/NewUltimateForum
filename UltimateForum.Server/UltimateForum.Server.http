@@ -1,0 +1,6 @@
+@UltimateForum.Server_HostAddress = http://localhost:5049
+
+GET {{UltimateForum.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="UltimateForum.Server/UltimateForum.Server.csproj" />
+  <Project Path="UltimateForum.TestSupplement/UltimateForum.TestSupplement.csproj" />
+</Solution>
