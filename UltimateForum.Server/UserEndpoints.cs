@@ -22,8 +22,11 @@ public static class UserEndpoints
         public RouteGroupBuilder Login()
         {
             
-            app.MapPost("login", (HttpContext context, UltimateForumDbContext db,  LoginPayload payload) =>
+            app.MapPost("login", (ILogger<WebApplication> logger, HttpContext context, UltimateForumDbContext db,  LoginPayload payload) =>
             {
+                #if DEBUG
+                logger.LogInformation("Req/Login: {0};{1}", payload.Username, payload.Password);
+                #endif
                 var pwd = payload.Password?.ToSha256String();
                 if (db.Users.FirstOrDefault(u =>
                         u.Username == payload.Username && u.Password == pwd) is {} u)

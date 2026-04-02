@@ -1,10 +1,10 @@
 using AXExpansion.AXHelper.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UltimateForum.Server;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -22,7 +22,7 @@ builder.Services.AddCors(o =>
 {
     o.AddPolicy(defaultCors, p =>
     {
-        p.WithOrigins("*").WithHeaders("Content-Type").AllowCredentials(); 
+        p.WithOrigins("http://localhost:3000").WithHeaders("Content-Type").AllowCredentials(); 
     });
 });
 
@@ -35,11 +35,9 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.UseSwaggerUI(o=>o.SwaggerEndpoint("/openapi/v1.json", "api")); 
+    
 }
-else
-{
-    app.UseCors(defaultCors);
-}
+app.UseCors(defaultCors);
 
 app.UseSession();
 using (var serviceScope = app.Services.CreateScope())
@@ -59,7 +57,7 @@ using (var serviceScope = app.Services.CreateScope())
 }
 app.UseHttpsRedirection();
 
-app.MapAllUserEndpoints(); 
+app.MapAllUserEndpoints();
 
 app.Run();
 
