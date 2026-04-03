@@ -46,3 +46,18 @@ public partial record User
     public ICollection<Board>? IsCreatorOf { get; set; }
     public ICollection<Tag>? IsTagCreatorOf { get; set; }
 }
+
+public record UserBody
+{
+    public long Id { get; set; }
+    public string? Username { get; set; }
+    public string? Email { get; set; }
+
+    public static implicit operator UserBody?(User? user) =>
+        user is null ? null : new()
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email,
+        };
+}

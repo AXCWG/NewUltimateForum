@@ -23,9 +23,9 @@ class ChangePasswordPayload
 }
 public static class UserEndpoints
 {
-    extension(RouteGroupBuilder app)
+    extension(IEndpointRouteBuilder app)
     {
-        public RouteGroupBuilder Login()
+        public IEndpointRouteBuilder Login()
         {
             
             app.MapPost("login", (ILogger<WebApplication> logger, HttpContext context, UltimateForumDbContext db,  LoginPayload payload) =>
@@ -42,8 +42,8 @@ public static class UserEndpoints
                     
                 }
                 return Results.BadRequest("Username or password is incorrect");
-            });
-            app.MapPost("change-password",
+            }).WithDescription("Login, server responses with Http Result along with session cookie. ");
+            app.MapPut("change-password",
                 (HttpContext context, UltimateForumDbContext db, ChangePasswordPayload payload) =>
                 {
                     if (context.Session.GetLong("uid") is {} id)
@@ -58,7 +58,7 @@ public static class UserEndpoints
 
                     return Results.Unauthorized(); 
 
-                });
+                }).WithDescription("Changes password. Server reads session cookie and old password in body. If matches, user's password'd be changed. ");
             app.MapGet("info", (HttpContext context, UltimateForumDbContext db) =>
             {
                 var uidS = context.Session.GetString("uid");
@@ -80,7 +80,7 @@ public static class UserEndpoints
                     u.CreatedAt
                 }); 
 
-            });
+            }).WithDescription("Gets information of current logged in user. ");
             app.MapPost("register", (HttpContext context, UltimateForumDbContext db, RegisterPayload payload) =>
             {
                 var entity = new User
@@ -94,7 +94,7 @@ public static class UserEndpoints
                 db.SaveChanges(); 
                 context.Session.SetString("uid", entity.Id.ToString());
                 return Results.Ok();
-            }); 
+            }).WithDescription("Registers a new user, then auto login. "); 
             
             return app; 
         }
@@ -102,9 +102,9 @@ public static class UserEndpoints
         
     }
 
-    extension(WebApplication app)
+    extension(IEndpointRouteBuilder app)
     {
-        public WebApplication MapAllUserEndpoints()
+        public IEndpointRouteBuilder MapAllUserEndpoints()
         {
             app.MapGroup("/api/v1/user/").Login(); 
             return app; 

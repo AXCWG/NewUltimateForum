@@ -22,4 +22,6 @@ public static class GlobalStatic
             return long.Parse(str); 
         }
     }
+
+    
 }

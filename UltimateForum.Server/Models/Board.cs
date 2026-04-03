@@ -46,3 +46,19 @@ public record Board
     public DateTime CreatedAt { get; set; }
     public ICollection<Tag>? Tags { get; set; }
 }
+
+public record BoardBody
+{
+    public long Id { get; set; }
+    public string? Name { get; set; }
+    public string? Description { get; set; }
+    public static implicit operator BoardBody(Board board)
+    {
+        return new()
+        {
+            Id = board.Id,
+            Name = board.Name,
+            Description = board.Description,
+        };
+    }
+}

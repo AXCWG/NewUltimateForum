@@ -57,7 +57,7 @@ using (var serviceScope = app.Services.CreateScope())
 }
 app.UseHttpsRedirection();
 
-app.MapAllUserEndpoints();
+app.MapAllUserEndpoints().MapAllSystemEndpoints().MapAllBoardEndpoints();
 
 app.Run();
 
