@@ -54,10 +54,12 @@ public record UserBody
     public string? Email { get; set; }
 
     public static implicit operator UserBody?(User? user) =>
-        user is null ? null : new()
+        user is null ? null : 
+        new()
         {
             Id = user.Id,
             Username = user.Username,
             Email = user.Email,
         };
+    
 }

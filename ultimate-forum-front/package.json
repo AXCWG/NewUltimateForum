@@ -5,13 +5,15 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "openapi": "pnpx @hey-api/openapi-ts -i http://localhost:5049/openapi/v1.json -o src/client"
   },
   "license": "MIT",
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.13",
+    "daisyui": "^5.5.19",
     "solid-devtools": "^0.34.3",
     "tailwindcss": "^4.1.13",
     "typescript": "^5.9.2",
@@ -19,6 +21,9 @@
     "vite-plugin-solid": "^2.11.8"
   },
   "dependencies": {
+    "@solidjs/router": "^0.16.1",
+    "linq": "^4.0.3",
+    "package": "^1.0.1",
     "solid-js": "^1.9.9"
   }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UltimateForum.Server;
 
@@ -10,9 +11,11 @@ using UltimateForum.Server;
 namespace UltimateForum.Server.Migrations
 {
     [DbContext(typeof(UltimateForumDbContext))]
-    partial class UltimateForumDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260405124043_2026-04-05T20:40:36+08:00")]
+    partial class _20260405T2040360800
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.14");
@@ -146,14 +149,9 @@ namespace UltimateForum.Server.Migrations
                     b.Property<DateTime>("RepliedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("RepliedUnderId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorId");
-
-                    b.HasIndex("RepliedUnderId");
 
                     b.ToTable("Replies");
                 });
@@ -293,14 +291,7 @@ namespace UltimateForum.Server.Migrations
                         .WithMany("RepliesReplied")
                         .HasForeignKey("CreatorId");
 
-                    b.HasOne("UltimateForum.Server.Models.Post", "RepliedUnder")
-                        .WithMany("Replies")
-                        .HasForeignKey("RepliedUnderId")
-                        .IsRequired();
-
                     b.Navigation("Creator");
-
-                    b.Navigation("RepliedUnder");
                 });
 
             modelBuilder.Entity("UltimateForum.Server.Models.Tag", b =>
@@ -315,11 +306,6 @@ namespace UltimateForum.Server.Migrations
             modelBuilder.Entity("UltimateForum.Server.Models.Board", b =>
                 {
                     b.Navigation("Posts");
-                });
-
-            modelBuilder.Entity("UltimateForum.Server.Models.Post", b =>
-                {
-                    b.Navigation("Replies");
                 });
 
             modelBuilder.Entity("UltimateForum.Server.Models.User", b =>

@@ -1,8 +1,7 @@
-using System.Diagnostics;
 using AXExpansion.AXHelper.Extensions;
 using UltimateForum.Server.Models;
 
-namespace UltimateForum.Server;
+namespace UltimateForum.Server.Endpoints.Api;
 class LoginPayload
 {  
     public required string Username { get; set; }
@@ -21,6 +20,12 @@ class ChangePasswordPayload
     public required string OldPassword { get; set; }
     public required string NewPassword { get; set; }
 }
+
+record UserInfoResponse(
+    long Id,
+    string Username,
+    string? Email,
+    DateTime CreatedAt);
 public static class UserEndpoints
 {
     extension(IEndpointRouteBuilder app)
@@ -42,7 +47,8 @@ public static class UserEndpoints
                     
                 }
                 return Results.BadRequest("Username or password is incorrect");
-            }).WithDescription("Login, server responses with Http Result along with session cookie. ");
+            }).WithDescription("Login, server responses with Http Result along with session cookie. ")
+            .Produces(200).Produces(400, typeof(string), "text/plain");
             app.MapPut("change-password",
                 (HttpContext context, UltimateForumDbContext db, ChangePasswordPayload payload) =>
                 {
@@ -58,7 +64,8 @@ public static class UserEndpoints
 
                     return Results.Unauthorized(); 
 
-                }).WithDescription("Changes password. Server reads session cookie and old password in body. If matches, user's password'd be changed. ");
+                }).WithDescription("Changes password. Server reads session cookie and old password in body. If matches, user's password'd be changed. ")
+                .Produces(200).Produces(401);
             app.MapGet("info", (HttpContext context, UltimateForumDbContext db) =>
             {
                 var uidS = context.Session.GetString("uid");
@@ -72,15 +79,9 @@ public static class UserEndpoints
                 }
 
                 var u = db.Users.Find(long.Parse(uidS))!;
-                return Results.Ok(new
-                {
-                    u.Id,
-                    u.Username,
-                    u.Email,
-                    u.CreatedAt
-                }); 
+                return TypedResults.Ok(new UserInfoResponse(u.Id, u.Username, u.Email, u.CreatedAt)); 
 
-            }).WithDescription("Gets information of current logged in user. ");
+            }).WithDescription("Gets information of current logged in user. ").Produces<UserInfoResponse>();
             app.MapPost("register", (HttpContext context, UltimateForumDbContext db, RegisterPayload payload) =>
             {
                 var entity = new User
@@ -106,7 +107,7 @@ public static class UserEndpoints
     {
         public IEndpointRouteBuilder MapAllUserEndpoints()
         {
-            app.MapGroup("/api/v1/user/").Login(); 
+            app.MapGroup("/user/").Login(); 
             return app; 
         }
     }

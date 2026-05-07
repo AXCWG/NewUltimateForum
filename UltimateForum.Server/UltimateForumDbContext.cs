@@ -42,6 +42,10 @@ public class UltimateForumDbContext : DbContext
             .HasForeignKey(k => k.CreatorId).OnDelete(DeleteBehavior.ClientSetNull);
         modelBuilder.Entity<Tag>().HasOne(t => t.Creator).WithMany(u=>u.IsTagCreatorOf).HasForeignKey(k=>k.CreatorId).OnDelete(DeleteBehavior.ClientSetNull);
         modelBuilder.Entity<Board>().HasMany(b => b.Tags).WithMany(t => t.BoardsUtilizing);
-        modelBuilder.Entity<Post>().HasMany(p => p.Tags).WithMany(t => t.PostsUtilizing); 
+        modelBuilder.Entity<Post>().HasMany(p => p.Tags).WithMany(t => t.PostsUtilizing);
+        modelBuilder.Entity<Post>().HasOne(p => p.BoardAssociated).WithMany(i => i.Posts)
+            .HasForeignKey(k => k.BoardAssociatedId).OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Reply>().HasOne(p => p.RepliedUnder).WithMany(t => t.Replies)
+            .HasForeignKey(k => k.RepliedUnderId).OnDelete(DeleteBehavior.ClientSetNull);
     }
 }

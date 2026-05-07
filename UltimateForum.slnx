@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="UltimateForum.CliClient/UltimateForum.CliClient.csproj" />
   <Project Path="UltimateForum.Server/UltimateForum.Server.csproj" />
-  <Project Path="UltimateForum.TestSupplement/UltimateForum.TestSupplement.csproj" />
+  <Project Path="UltimateForum.UnitTests/UltimateForum.UnitTests.csproj" />
 </Solution>

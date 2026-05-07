@@ -1,7 +1,13 @@
-using AXExpansion.AXHelper.Extensions;
-using Microsoft.AspNetCore.Mvc;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
+using NSwag;
+using NSwag.CodeGeneration.TypeScript;
+using Scalar.AspNetCore;
 using UltimateForum.Server;
+using UltimateForum.Server.Endpoints;
+using UltimateForum.Server.Endpoints.Api;
+using UltimateForum.Server.Endpoints.PageSchema;
+using UltimateForum.Server.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,8 +40,8 @@ GlobalStatic.ApplicationConfiguration = app.Configuration;
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseSwaggerUI(o=>o.SwaggerEndpoint("/openapi/v1.json", "api")); 
-    
+    app.MapScalarApiReference();
+
 }
 app.UseCors(defaultCors);
 
@@ -54,10 +60,60 @@ using (var serviceScope = app.Services.CreateScope())
         });
         ultimateForumDbContext.SaveChanges();
     }
+
+    #region Init
+    {
+        var admin = ultimateForumDbContext.Users.Find(1L)?? throw new InvalidOperationException("No admin?? How? ");
+        
+        if (!ultimateForumDbContext.Boards.Any())
+        {
+            ultimateForumDbContext.Boards.Add(new Board
+            {
+                Name = "Default Board",
+                Description = "Default board created in initialization.",
+                Op = admin ,
+                Creator = admin
+            });
+            ultimateForumDbContext.SaveChanges();
+        }
+
+        var defBoard = ultimateForumDbContext.Boards.Find(1L) ??
+                       throw new InvalidOperationException("No default board?? How? ");
+        if (!ultimateForumDbContext.Posts.Any())
+        {
+            ultimateForumDbContext.Posts.Add(new Post
+            {
+                Title = "Welcome to Ultimate Forum!",
+                Content = "This is the first post in the default board. Feel free to create new posts and discuss!",
+                BoardAssociated = defBoard,
+                Poster = admin,
+                CreatedAt = DateTime.Now,
+            });
+            ultimateForumDbContext.SaveChanges();
+        }
+
+        var post = ultimateForumDbContext.Posts.Find(1L) ??
+                   throw new InvalidOperationException("No default post?? how?");
+        if (!ultimateForumDbContext.Replies.Any())
+        {
+            ultimateForumDbContext.Replies.Add(new Reply
+            {
+                Content = "Welcome :3",
+                RepliedUnder = post,
+                RepliedAt = DateTime.Now
+            });
+            ultimateForumDbContext.SaveChanges();
+        }
+    }
+    #endregion
+    
 }
 app.UseHttpsRedirection();
-
-app.MapAllUserEndpoints().MapAllSystemEndpoints().MapAllBoardEndpoints();
+app.MapGet("/ping", () => Results.Ok("pong")).Produces(200, typeof(string), "text/plain");
+app.MapAllSystemEndpoints();
+app.MapAllApiEndpoints();
+app.MapAllPageSchema();
 
 app.Run();
+
 

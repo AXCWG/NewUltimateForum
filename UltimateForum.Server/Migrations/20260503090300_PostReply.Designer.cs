@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UltimateForum.Server;
 
@@ -10,9 +11,11 @@ using UltimateForum.Server;
 namespace UltimateForum.Server.Migrations
 {
     [DbContext(typeof(UltimateForumDbContext))]
-    partial class UltimateForumDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260503090300_PostReply")]
+    partial class PostReply
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.14");
