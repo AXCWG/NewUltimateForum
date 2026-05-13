@@ -44,7 +44,7 @@ public class UltimateForumDbContext : DbContext
         modelBuilder.Entity<Board>().HasMany(b => b.Tags).WithMany(t => t.BoardsUtilizing);
         modelBuilder.Entity<Post>().HasMany(p => p.Tags).WithMany(t => t.PostsUtilizing);
         modelBuilder.Entity<Post>().HasOne(p => p.BoardAssociated).WithMany(i => i.Posts)
-            .HasForeignKey(k => k.BoardAssociatedId).OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(k => k.BoardAssociatedId).OnDelete(DeleteBehavior.ClientSetNull);
         modelBuilder.Entity<Reply>().HasOne(p => p.RepliedUnder).WithMany(t => t.Replies)
             .HasForeignKey(k => k.RepliedUnderId).OnDelete(DeleteBehavior.ClientSetNull);
     }

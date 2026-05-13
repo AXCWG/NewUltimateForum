@@ -35,38 +35,50 @@ const App: Component = () => {
 					  <div class={"text-6xl font-light"}>Ultimate Forum</div>
 					  <div class={"text-base-content/60"}>Good forum software. </div>
 				  </div>
+					<div class={"grid xl:grid-cols-12  gap-3"}>
+						<table class={"table h-auto xl:col-span-8 table-md border border-base-content/5"}>
+							<thead>
+							<tr>
+								<td style={{width: "100%"}}>Board Name</td>
 
-				  <table class={"table table-sm border border-base-content/5 table-fixed"}>
-					  <thead>
-					  	<tr>
-							<td>Board Name</td>
+								<td>Newest Activity</td>
+								<td class={hiddenCell}>Post-Reply count</td>
+								<td>Operator</td>
+							</tr>
+							</thead>
+							<tbody>
+							<For each={userInfo()?.boards}>
+								{
+									x=>{
+										return <tr>
+											<A href={`/board/${x.id}`} class={"p-3"} style={{display: "table-cell"}}>
+												{x.name}<br/>
+												<span class={"text-base-content/60"}>{x.description}</span>
+											</A>
+											<td>{x.posts && x.posts.length !== 0 ? (()=> {
+												let t = Enumerable.from(x.posts).orderByDescending(p => p.createdAt).first();
+												return <Show when={signal_evf87()} fallback={<A href={`/post/${t.id}`}>{CutByEllipsis(t.title)}</A>}><A href={`/post/${t.id}`}>{t.title}</A></Show>
+											})() : <>No activity.</>}</td>
+											<td class={hiddenCell}>{x.posts ? x.posts.length + Enumerable.from(x.posts).sum(p=>p.replies ? p.replies.length : 0) : null}</td>
+											<td>{x.op?.username}</td>
+										</tr>
+									}
+								}
+							</For>
+							</tbody>
+						</table>
+						<div class={"card items-center xl:col-span-4 w-full p-5 bg-base-200 flex flex-col gap-2"}>
+							<div class={"w-full"}>登录</div>
+							<input class={"input"} placeholder={"用户名"}/>
+							<input class={"input"} type={"password"} placeholder={"密码"}/>
+								<div class={"flex  w-auto gap-2"}>
+									<button class={"btn btn-primary grow "}>登录</button>
+									<button class={"btn btn-secondary grow"}>注册</button>
+								</div>
+							</div>
 
-							<td>Newest Activity</td>
-							<td class={hiddenCell}>Post-Reply count</td>
-							<td>Operator</td>
-						</tr>
-					  </thead>
-					  <tbody>
-					  <For each={userInfo()?.boards}>
-						  {
-							  x=>{
-								  return <tr>
-									  <td>
-										  {x.name}<br/>
-										  <span class={"text-base-content/60"}>{x.description}</span>
-									  </td>
-									  <td>{x.posts && x.posts.length !== 0 ? (()=> {
-											  let t = Enumerable.from(x.posts).orderByDescending(p => p.createdAt).first();
-											  return <Show when={signal_evf87()} fallback={<A href={`/post/${t.id}`}>{CutByEllipsis(t.title)}</A>}><A href={`/post/${t.id}`}>{t.title}</A></Show>
-									  })() : <>No activity.</>}</td>
-									  <td class={hiddenCell}>{x.posts ? x.posts.length + Enumerable.from(x.posts).sum(p=>p.replies ? p.replies.length : 0) : null}</td>
-									  <td>{x.op?.username}</td>
-								  </tr>
-							  }
-						  }
-					  </For>
-					  </tbody>
-				  </table>
+					</div>
+
 			  </div>
 		  </>
 

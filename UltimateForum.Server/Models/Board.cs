@@ -14,16 +14,16 @@ public record Board
     public required string Description { get; set; }
     public ICollection<User>? Moderators { get; set; }
 
-    public required User Op { get; set; }
-    public long  OpId { get; init; }
+    public required User? Op { get; set; }
+    public long?  OpId { get; init; }
 
     /// <summary>
     /// Shall be defaulted to Admin. 
     /// </summary>
-    public required User Creator { get;
+    public required User? Creator { get;
         set
         {
-            if (value.Username != "admin" && value.Id != 1 && !GlobalStatic.ApplicationConfiguration.GetConfiguredValueOrThrow("AllowUserCreateBoard"))
+            if (value?.Username != "admin" && value?.Id != 1 && !GlobalStatic.ApplicationConfiguration.GetConfiguredValueOrThrow("AllowUserCreateBoard"))
             {
                 throw new ValidationException("Creater is not Admin when AllowUserCreateBoard is false. "); 
             }
@@ -31,7 +31,7 @@ public record Board
             field = value; 
         } }
 
-    public long CreatorId
+    public long? CreatorId
     {
         get;
         init; 

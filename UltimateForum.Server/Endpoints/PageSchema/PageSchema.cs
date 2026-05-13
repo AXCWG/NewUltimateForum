@@ -18,13 +18,16 @@ public static class PageSchema
                     .AsEnumerable()
                     .Select(b =>
                     {
-                        b.Op = new()
-                        {
-                            Id = b.OpId,
-                            Username = b.Op.Username,
-                            CreatedAt = b.Op.CreatedAt,
-                        };
-                        return b;
+                       if (b.Op is not null)
+                       {
+                           b.Op = new()
+                           {
+                               Id = b.Op.Id,
+                               Username = b.Op.Username,
+                               CreatedAt = b.Op.CreatedAt,
+                           };
+                       }
+                       return b;
                     }).Select(b =>
                     {
                         b.Posts = b.Posts.Select(p => new Post

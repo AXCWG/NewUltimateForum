@@ -56,11 +56,11 @@ public record Post
     /// <summary>
     /// Should not be null in any given moment except for the occasion that this field is set through BoardAssociatedId property. 
     /// </summary>
-    public Board BoardAssociated { get; set; } = null!;
+    public Board? BoardAssociated { get; set; }
     /// <summary>
     /// Should not be null in any given moment except for the occasion that this field is set through BoardAssociated property. 
     /// </summary>
-    public long BoardAssociatedId { get;  init;  }
+    public long? BoardAssociatedId { get;  init;  }
     public IEnumerable<Reply>? Replies { get; set; }
     public static implicit operator PostBody(Post p) => new()
         {

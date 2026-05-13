@@ -39,8 +39,8 @@ public record Reply
         }
         
     }
-    public required Post RepliedUnder { get; set; }
-    public long RepliedUnderId { get; set; }
+    public required Post? RepliedUnder { get; set; }
+    public long? RepliedUnderId { get; set; }
 
     public required DateTime RepliedAt { get; set; }
 
