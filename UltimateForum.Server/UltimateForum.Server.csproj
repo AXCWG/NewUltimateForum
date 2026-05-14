@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AXExpansion" Version="1.2.2" />
         <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.14">
@@ -20,6 +19,12 @@
         <PackageReference Include="Scalar.AspNetCore" Version="2.14.9" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.7" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="AXExpansion">
+        <HintPath>..\..\AXExpansion\AXExpansion\bin\Release\net7.0\AXExpansion.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

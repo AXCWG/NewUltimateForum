@@ -6,7 +6,7 @@ public static class MapAll
      {
            public IEndpointRouteBuilder MapAllPageSchema()
            {
-               var group = app.MapGroup("/schema/v1").IndexSchema();
+               var group = app.MapGroup("/schema/v1").IndexSchema().BoardSchema();
                return group;
            }
      }   

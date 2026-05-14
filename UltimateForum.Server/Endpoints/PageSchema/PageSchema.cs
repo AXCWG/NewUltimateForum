@@ -1,3 +1,4 @@
+using AXExpansion;
 using Microsoft.EntityFrameworkCore;
 using UltimateForum.Server.Models;
 
@@ -6,6 +7,7 @@ namespace UltimateForum.Server.Endpoints.PageSchema;
 
 public static class PageSchema
 {
+    record BoardPageSchema(UserBody? Creator, UserBody? Op, IEnumerable<UserBody>? Moderator, IEnumerable<PostBody> Posts, UserBody? UserBody);
     record IndexPageSchema(ICollection<BoardBody> Boards, UserBody? User);
     extension(IEndpointRouteBuilder app)
     {
@@ -40,6 +42,24 @@ public static class PageSchema
                     }).Select(i=>(BoardBody)i).ToList(), dbContext.Users.Find(context.Session.GetLong("uid")));
                 return Results.Ok(resp);
             }).Produces<IndexPageSchema>();
+            return app; 
+        }
+
+        public IEndpointRouteBuilder BoardSchema()
+        {
+            app.MapGet("/board/{id:long}", (long id, UltimateForumDbContext dbContext, HttpContext httpContext) =>
+            {
+                var board = dbContext.Boards
+                    .Include(b=>b.Moderators)
+                    .Include(b=>b.Op)
+                    .Include(b=>b.Creator)
+                    .Include(b=>b.Posts)
+                    .AsNoTracking()
+                    .FirstOrDefault(b => b.Id == id);
+                if (board is null)
+                    return Results.NotFound("Unknown board");
+                return Results.Ok(new BoardPageSchema( board.Creator, board.Op, board.Moderators.Select(i=>(UserBody)i),board.Posts.Select(i=>(PostBody)i), dbContext.Users.Find(httpContext.Session.GetLong("uid"))));
+            }).Produces<BoardPageSchema>();
             return app; 
         }
     }
