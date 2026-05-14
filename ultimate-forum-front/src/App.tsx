@@ -35,7 +35,7 @@ const App: Component = () => {
 					  <div class={"text-6xl font-light"}>Ultimate Forum</div>
 					  <div class={"text-base-content/60"}>Good forum software. </div>
 				  </div>
-					<div class={"grid xl:grid-cols-12  gap-3"}>
+					<div class={"grid xl:grid-cols-12 gap-3 items-start"}>
 						<table class={"table h-auto xl:col-span-8 table-md border border-base-content/5"}>
 							<thead>
 							<tr>
